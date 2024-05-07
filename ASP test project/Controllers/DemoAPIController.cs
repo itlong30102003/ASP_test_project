@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using taxCalculator;
 
 namespace ASP_test_project.Controllers
 {
@@ -16,7 +17,23 @@ namespace ASP_test_project.Controllers
         {
             _apiDemoDbContext = apiDemoDbContext;
         }
+        [HttpPost]
+        [Route("calculate-tax")]
+        public IActionResult CalculateTax([FromBody] TaxCalculationRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Invalid request data.");
+            }
 
+             float taxAmount = TaxCalculator.Calculate(request.Salary, request.Income, request.Dependent);
+            return Ok(new { TaxAmount = taxAmount });
+        }
+
+
+
+
+        //Bài 3
         [HttpGet]
         [Route("get-users-list")]
         public async Task<IActionResult> GetAsync()
